@@ -1,0 +1,58 @@
+angular.module('factory',[])
+.factory('datafactory',['$http','$window',function ($http, $window) {
+    var timeOut = 150;
+    var isAsync = true;
+    var getMethod = 'GET';
+    var postMethod = 'POST';
+     var baseURL = ‘YOUR SEVICE URL GOES HERE.. ’;
+      var serviceURLs  = {
+        mobileLogin : 'cnbMobilelogin.mocapp',
+        mobileEntitlements: 'cnbEntitlements.mocapp',
+	REST OF METHODS DEFINED HERE..
+    }                   
+    var dataFactory = {};
+                        
+    dataFactory.getAuthentication = function (creds) {      
+        //console.log("Called for Authentication");
+        var sendUrl = baseURL+serviceURLs.mobileLogin+"?uid="+creds.uid+"&pwd="+creds.pwd;
+        var aRequest = $window.plugins.GDHttpRequest.createRequest(getMethod, sendUrl, timeOut, isAsync);
+        aRequest.addRequestHeader("Content-Type","text/json");
+        //console.log (aRequest);
+        return aRequest;
+    };
+
+    /* Filters */
+    dataFactory.getBusinessFilter = function(creds)
+    {
+        //console.log("Get Business filter");
+        var sendUrl = baseURL+serviceURLs.mobileBusinessFilter+"?uid="+creds.uid+"&cType="+creds.cType+"&cName="+creds.cName+"&REQ_PARAM="+creds.REQ_PARAM;
+        //console.log(baseURL+serviceURLs.mobileBusinessFilter);
+
+//GOOD REQUEST CREATED HERE..AND RETURNED TO CONTROLLER FOR INVOCATION
+
+        var aRequest = 	$window.plugins.GDHttpRequest.createRequest(postMethod ,sendUrl, timeOut, isAsync);
+        aRequest.addRequestHeader("Content-Type","text/json");
+        //console.log (aRequest);
+        return aRequest;
+    };
+                        
+    dataFactory.getRegionFilter = function(creds)
+    {
+        //console.log("Get Region filter");
+        var credUid = ""
+        if(creds.uid != undefined){
+            credUid = "&uid="+creds.uid;
+        }
+        var sendUrl = baseURL+serviceURLs.mobileRegionFilter+"?cType="+creds.cType+"&cName="+creds.cName+"&BUSINESS_LINE="+creds.BUSINESS_LINE+"&REQ_PARAM="+creds.REQ_PARAM+credUid;
+        //console.log(baseURL+serviceURLs.mobileRegionFilter);
+        var aRequest = $window.plugins.GDHttpRequest.createRequest(postMethod ,sendUrl, timeOut, isAsync);
+        aRequest.addRequestHeader("Content-Type","text/json");
+        //console.log (aRequest);
+        return aRequest;
+    };
+                        
+     
+
+    return dataFactory;
+                        
+}]);
